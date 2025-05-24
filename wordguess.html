@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Guessing Game</title>
+    <style>
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            transition: background 0.5s;
+        }
+        .container {
+            background: rgba(255,255,255,0.95);
+            padding: 2.5rem 2rem;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h3 {
+            margin-bottom: 1.5rem;
+            color: #333;
+            letter-spacing: 1px;
+            font-size: 1.7rem;
+        }
+        input[type="text"] {
+            padding: 0.7rem 1rem;
+            border: 1.5px solid #b2bec3;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            margin-bottom: 1.2rem;
+            outline: none;
+            transition: border 0.2s;
+            width: 220px;
+            box-sizing: border-box;
+        }
+        input[type="text"]:focus {
+            border: 2px solid #74ebd5;
+        }
+        button {
+            padding: 0.7rem 2.2rem;
+            background: linear-gradient(90deg, #74ebd5 0%, #ACB6E5 100%);
+            color: #222;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(44, 62, 80, 0.08);
+            transition: background 0.2s, color 0.2s, transform 0.1s;
+        }
+        button:hover {
+            background: linear-gradient(90deg, #ACB6E5 0%, #74ebd5 100%);
+            color: #0a3d62;
+            transform: translateY(-2px) scale(1.04);
+        }
+        @media (max-width: 500px) {
+            .container {
+                padding: 1.2rem 0.5rem;
+            }
+            h3 {
+                font-size: 1.2rem;
+            }
+            input[type="text"] {
+                width: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <label><h3>Your guess??</h3></label>
+        <input type="text" placeholder="guess the word" id="input-btn">
+        <button id="btn">check</button>
+    </div>
+    <script>
+        function effect(callback) {
+    const body = document.body;
+    const intervalTime = 50;
+    let elapsed = 0;
+
+    body.style.background = '';
+
+    const interval = setInterval(() => {
+        const r = Math.floor(Math.random() * 256);
+        const g = Math.floor(Math.random() * 256);
+        const b = Math.floor(Math.random() * 256);
+        body.style.background = `rgb(${r}, ${g}, ${b})`;
+        elapsed += intervalTime;
+
+        if (elapsed >= 1500) {
+            clearInterval(interval);
+            
+            body.style.background = 'linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%)';
+            callback();
+        }
+    }, intervalTime);
+}
+
+    
+        fetch("https://random-word-api.vercel.app/api?words=1&length=5")
+        .then((response) => response.json())
+        .then((data)=>{
+            const word = data[0];
+            displayresult(word);
+        });
+    
+        function displayresult(word){
+            document.getElementById("btn").addEventListener('click',()=>{
+                effect(() => {
+                    const text = document.getElementById('input-btn').value;
+                    if(word.toLowerCase() === text.trim().toLowerCase()){
+                        alert("Nice work guessing the word!");
+                    }
+                    else{
+                        alert("Try again.\nThe word was: " + word);
+                    }
+                    // Optionally, you can reset the input here
+                    // document.getElementById('input-btn').value = '';
+                });
+            });
+        }
+    </script>
+    
+</body>
+</html>
